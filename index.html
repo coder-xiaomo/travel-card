@@ -50,6 +50,16 @@
             margin: 0 4px;
         }
 
+        button {
+            border: none;
+            background-color: #00A961;
+            color: white;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         #app {
             max-width: 512px;
             background-color: #00A961;
@@ -237,12 +247,12 @@
                     <div style="display: grid;">
                         <div style="font-weight: bold; margin-bottom: 20px;">设置</div>
                         <!-- 设置项 -->
-                        <div style="display: grid; grid-template-columns: auto 1fr 50px; gap: 10px; font-size: 14px;">
+                        <div style="display: grid; grid-template-columns: auto 1fr 60px; gap: 10px; font-size: 14px;">
                             <template v-for="item in setting">
                                 <div class="setting-title">{{ item.name }}</div>
                                 <div class="setting-input" :style="item.more ? {} : { 'grid-column': 'span 2' }">
-                                    <textarea v-if="item.textarea" v-model="card[item.key]"
-                                        :maxlength="item.maxlength" style="width: 100%; resize: none;" rows="3"></textarea>
+                                    <textarea v-if="item.textarea" v-model="card[item.key]" :maxlength="item.maxlength"
+                                        style="width: 100%; resize: none;" rows="3"></textarea>
                                     <input v-else :placeholder="item.name" :maxlength="item.maxlength"
                                         v-model="card[item.key]" />
                                 </div>
@@ -252,6 +262,13 @@
                                 </div>
                             </template>
                         </div>
+                        <div style="font-size: 13px; color: grey;">
+                            <p><b>说明：</b></p>
+                            <p style="text-indent: 5px;">1. 配置好后，您可以截图保存</p>
+                            <p style="text-indent: 5px;">2. 点击屏幕可以再次打开本窗口</p>
+                            <p style="text-indent: 5px;">3. 以上配置在刷新后将恢复默认</p>
+                        </div>
+                        <button style="margin-top: 10px;" @click="toggleSetting">完成</button>
                     </div>
                 </div>
             </div>
