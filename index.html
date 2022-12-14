@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通信行程卡 - 纪念版</title>
+    <link rel="shortcut icon" href="./assets/image/arrow-compressed.png" type="image/x-icon">
+    <style>
+        .animate {
+            animation-name: arrowScale;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-duration: 1.8s;
+        }
+
+        @keyframes arrowScale {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.28);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            text-align: center;
+            user-select: none;
+        }
+
+        a,
+        a:visited {
+            color: #42B883;
+            /* color: white; */
+            text-decoration: none;
+            margin: 0 4px;
+        }
+
+        #app {
+            max-width: 512px;
+            background-color: #00A961;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .container {
+            display: grid;
+            height: 100%;
+            width: 100%;
+            grid-template-columns: 1fr;
+            /* grid-template-rows: 4fr 12fr 42fr 20fr; */
+            grid-template-rows: 4fr 12fr auto 20fr;
+            place-items: center;
+        }
+
+        .title {
+            color: white;
+        }
+
+        .card {
+            width: 80%;
+            height: 100%;
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            display: grid;
+            /* grid-template-rows: 40px 72px 1fr 60px; */
+            grid-template-rows: 40px 72px 240px auto;
+        }
+
+        .bottom {
+            color: white;
+            font-size: 13px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .footbar {
+            color: white;
+            font-size: 13px;
+            position: absolute;
+            bottom: 3px;
+            left: 0;
+            right: 0;
+            z-index: 3;
+        }
+
+        .footbar-setting {
+            font-size: 14;
+            background-color: #000000;
+            bottom: 0;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            padding: 10px;
+            line-height: 1.5em;
+        }
+
+        .cover {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+        .grey-cover {
+            /* background-color: #0000006e; */
+            /* 兼容 */
+            background-color: #000000;
+            opacity: 0.5;
+        }
+
+        .control-panel-container {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            display: grid;
+            place-items: center;
+        }
+
+        .control-panel {
+            width: 80%;
+            max-width: 480px;
+            min-height: 30%;
+            background-color: #FFF;
+        }
+
+        .setting-title {
+            text-align: left;
+        }
+
+        .setting-input {
+            width: 100%;
+        }
+
+        .setting-input input {
+            width: 100%;
+        }
+    </style>
+    <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.prod.min.js"></script> -->
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div>
+                <!-- 用于占位 -->
+            </div>
+            <div class="title">
+                <h1 style="letter-spacing: 2.5px; text-indent: 2.5px;">{{ card.title }}</h1>
+                <p style="margin-top: 5px;">{{ card.subtitle }}</p>
+            </div>
+            <div class="card">
+                <div>
+                    <div style="background-color: #CFEEDF; height: 20px;"></div>
+                    <div style="background-color: #CFEEDF;
+                                height: 40px;
+                                position: relative;
+                                margin: 0 auto;
+                                color: #00A766;
+                                border-bottom-left-radius: 24px;
+                                border-bottom-right-radius: 24px;
+                                top: -20px;
+                                line-height: 40px;
+                                display: inline-block;
+                                padding: 0 40px;
+                                letter-spacing: 0.8px;">
+                        请收下绿色行程卡
+                    </div>
+                </div>
+                <div>
+                    <p style="font-weight: bold; font-size: 16px; margin-top: 18px;">
+                        {{ card.phone }}的动态行程卡
+                    </p>
+                    <p style="font-size: 18px; color: grey; margin-top: 12px;">
+                        {{ card.time }}
+                    </p>
+                </div>
+                <div style="display: grid; place-items: center;">
+                    <img src="./assets/image/arrow-compressed.png" style="width: 45%;" class="animate" />
+                </div>
+                <div>
+                    <div
+                        style="border-top: 1px solid #E3E3E3; margin: 0 20px; padding-top: 8px; color: #91919B; padding-bottom: 12px;">
+                        您于 {{ card.timeSpan }} 年到达或途径：<span style="font-weight: bold; color: black;">{{ card.location
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div style="margin: 12px 10%;">
+                    2022年12月13日0时起，正式下线“通信行程卡”服务，“通信行程卡”短信、网页、微信小程序、支付宝小程序、APP等查询渠道将同步下线。
+                </div>
+                <div>
+                    ———— 三年了，再见 ————
+                </div>
+                <div style="margin-top: 8px;">
+                    <p>2020.02.13 - 2022.12.13</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置页面 -->
+        <div v-if="showSetting" class="cover grey-cover"></div>
+        <div v-else class="cover" @click="toggleSetting"></div>
+        <div v-if="showSetting" class="control-panel-container" @click="toggleSetting">
+            <div class="control-panel" @click.stop>
+                <div style="position: relative; text-align: initial; padding: 16px;">
+                    <!-- 关闭按钮 -->
+                    <div style="font-size: 40px;
+                                position: absolute;
+                                right: 5px;
+                                top: 5px;
+                                line-height: 32px;
+                                width: 32px;
+                                height: 32px;
+                                cursor: pointer;" @click="toggleSetting">×</div>
+                    <div style="display: grid;">
+                        <div style="font-weight: bold; margin-bottom: 20px;">设置</div>
+                        <!-- 设置项 -->
+                        <div style="display: grid; grid-template-columns: auto 1fr 50px; gap: 10px; font-size: 14px;">
+                            <template v-for="item in setting">
+                                <div class="setting-title">{{ item.name }}</div>
+                                <div class="setting-input" :style="item.more ? {} : { 'grid-column': 'span 2' }">
+                                    <textarea v-if="item.textarea" v-model="card[item.key]"
+                                        :maxlength="item.maxlength" style="width: 100%; resize: none;" rows="3"></textarea>
+                                    <input v-else :placeholder="item.name" :maxlength="item.maxlength"
+                                        v-model="card[item.key]" />
+                                </div>
+                                <div class="setting-reset" v-if="item.more">
+                                    <button style="width: 100%;"
+                                        @click="card[item.key] = getRandom(item.more, card[item.key])">换一个</button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部说明 -->
+        <div class="footbar" :class="{ 'footbar-setting': showSetting }">
+            <p :style="showSetting ? {} : { color: '#cfeedf' }">
+                * 本页面仅作纪念，无实际意义，不得用于防疫等相关场景
+            </p>
+            <p v-if="showSetting">
+                本页面由 程序员小墨 制作并开源<br>
+                欢迎关注：
+                <a target="_blank" href="https://space.bilibili.com/457109942">B站</a>
+                <a @click="alert('微信搜索 [程序员小墨] 公众号并关注即可，感谢支持！')">公众号</a>
+                开源地址：
+                <a target="_blank" href="https://github.com/coder-xiaomo/travel-card">GitHub</a>
+                <a target="_blank" href="https://gitee.com/coder-xiaomo/travel-card">Gitee</a>
+            </p>
+        </div>
+    </div>
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    showSetting: true,
+                    card: {
+                        title: "通信行程卡纪念版",
+                        subtitle: "做自己的健康第一责任人",
+                        phone: "某某某",
+                        time: "停止于：2022.12.13 00:00:00",
+                        timeSpan: "2020 - 2022",
+                        location: "湖北省武汉市、湖北省天门市", // ["湖北省武汉市", "湖北省天门市"],
+                    },
+                    setting: [
+                        {
+                            key: "title",
+                            name: "标题",
+                            maxlength: 15,
+                            more: ["通信行程卡纪念版", "行程卡纪念版", "通信大数据行程卡纪念版"]
+                        },
+                        {
+                            key: "subtitle",
+                            name: "副标题",
+                            maxlength: 15,
+                            more: ["做自己的健康第一责任人", "回顾行程卡的1034天", "做好疫情防控第一责任人", "疫情防控，人人有责"]
+                        },
+                        {
+                            key: "phone",
+                            name: "归属人",
+                            maxlength: 15,
+                            more: ["2020***2022", "您的姓名", "189****1234", "某某某"]
+                        },
+                        {
+                            key: "time",
+                            name: "时间",
+                            maxlength: 15,
+                            more: ["2020.02.13 - 2022.12.13", "2020年 - 2022年", "停止于：2022.12.13 00:00:00", "更新于：2022.12.13 00:00:00"]
+                        },
+                        {
+                            key: "location",
+                            name: "到达地点",
+                            maxlength: 300,
+                            more: null,
+                            textarea: true,
+                        }
+                    ]
+                }
+            },
+            methods: {
+                toggleSetting(e) {
+                    console.log(e)
+                    this.showSetting = !this.showSetting
+                },
+                getRandom(arr, oldVal) {
+                    let returnVal = oldVal
+                    while (returnVal == oldVal && (
+                        arr.length > 1 || (arr.length == 1 && arr[0] !== oldVal)
+                    )) {
+                        returnVal = arr[Math.floor(Math.random() * arr.length)]
+                    }
+                    return returnVal
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
