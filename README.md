@@ -1,15 +1,7 @@
-# 通信行程卡纪念版 H5
+# 通信行程卡 之 优化版
 
-[GitHub](https://github.com/coder-xiaomo/travel-card) [Gitee](https://gitee.com/coder-xiaomo/travel-card)
+> 优化说明：优化页面结构，更像原版，添加标题字体等
 
 **注意：本项目仅作纪念，无实际意义，不得用于防疫等相关场景**
 
-
-
-本项目由 程序员小墨 制作并开源，欢迎关注我的[B站](https://space.bilibili.com/457109942)和公众号（ID：程序员小墨）
-
-
-
-感谢大家提的Pr，由于功能差异无法合并到同一分支，所以合并到不同分支中了，大家可以前往以下分支查看：
-
-- feat-color: 黄、红卡及彩蛋卡版（[小林囝](https://gitee.com/teochew)提交的[Pull Request](https://gitee.com/coder-xiaomo/travel-card/pulls/1)）
+本项目由 程序员小墨 制作并开源，当前分支由[@呱行次比猫](https://space.bilibili.com/38238808)基于 main 分支修改而来
