@@ -173,15 +173,18 @@
         .no {
             background-color: #e43b00;
         }
-        .text-green{
+
+        .text-green {
             color: #00A766;
             background-color: #CFEEDF;
         }
-        .text-red{
+
+        .text-red {
             color: #e43b00;
             background-color: #ffe6dc;
         }
-        .text-yellow{
+
+        .text-yellow {
             color: #f7ba00;
             background-color: #fff4d3;
         }
@@ -192,7 +195,7 @@
 
 <body>
     <div id="app">
-        <div class="container" :class="card.type==1?'yellow':card.type==0?'':'red'">
+        <div class="container" :class="cardClass">
             <div>
                 <!-- 用于占位 -->
             </div>
@@ -202,8 +205,8 @@
             </div>
             <div class="card">
                 <div>
-                    <div :class="card.type==1?'text-yellow':card.type==0?'text-green':'text-red'" style=" height: 20px;"></div>
-                    <div :class="card.type==1?'text-yellow':card.type==0?'text-green':'text-red'" style="
+                    <div :class="`text-${cardClass}`" style=" height: 20px;"></div>
+                    <div :class="`text-${cardClass}`" style="
                                 height: 40px;
                                 position: relative;
                                 margin: 0 auto;
@@ -214,7 +217,7 @@
                                 display: inline-block;
                                 padding: 0 40px;
                                 letter-spacing: 0.8px;">
-                        请收下{{card.type==1?'黄':card.type==0?'绿':'红'}}色行程卡
+                        请收下{{ cardColor }}色行程卡
                     </div>
                 </div>
                 <div>
@@ -226,7 +229,7 @@
                     </p>
                 </div>
                 <div style="display: grid; place-items: center;">
-                    <img :src="card.type==1?'./assets/image/yellow-compressed.png':card.type==2?'./assets/image/red-compressed.png':card.type==3?'./assets/image/no-compressed.png':card.type==4?'./assets/image/birthday-compressed.png':'./assets/image/arrow-compressed.png'" style="width: 45%;" class="animate" />
+                    <img :src="cardArrow" style="width: 45%;" class="animate" />
                 </div>
                 <div>
                     <div
@@ -271,22 +274,22 @@
                             <template v-for="item in setting">
                                 <div class="setting-title">{{ item.name }}</div>
                                 <div class="setting-input" :style="item.more ? {} : { 'grid-column': 'span 2' }">
-                                    <textarea v-if="item.type=='textarea'" v-model="card[item.key]" :maxlength="item.maxlength"
-                                        style="width: 100%; resize: none;" rows="3"></textarea>
-                                        <div  v-else-if="item.type=='radio'" >
-                                            <select v-model="card[item.key]">
-                                            <template v-for="iitem in item.more">
-                                                <option 
-                                        :value="iitem.value"
-                                        :selected="card[item.key]==iitem.value"> {{iitem.name}}</option>
-                                            </template>
+                                    <textarea v-if="item.type == 'textarea'" v-model="card[item.key]"
+                                        :maxlength="item.maxlength" style="width: 100%; resize: none;"
+                                        rows="3"></textarea>
+                                    <div v-else-if="item.type == 'radio'">
+                                        <select v-model="card[item.key]">
+                                            <option v-for="radioItem in item.more" :value="radioItem.value"
+                                                :selected="card[item.key] == radioItem.value">
+                                                {{radioItem.name}}
+                                            </option>
                                         </select>
-                                        </div>
-                                        <input v-else :placeholder="item.name" :maxlength="item.maxlength"
+                                    </div>
+                                    <input v-else :placeholder="item.name" :maxlength="item.maxlength"
                                         v-model="card[item.key]" />
                                 </div>
                                 <div class="setting-reset" v-if="item.more">
-                                    <button v-if="item.type!='radio'" style="width: 100%;"
+                                    <button v-if="item.type != 'radio'" style="width: 100%;"
                                         @click="card[item.key] = getRandom(item.more, card[item.key])">换一个</button>
                                 </div>
                             </template>
@@ -330,47 +333,72 @@
                         {
                             key: "title",
                             name: "标题",
-                            type:'input',
+                            type: 'input',
                             maxlength: 15,
                             more: ["通信行程卡纪念版", "行程卡纪念版", "通信大数据行程卡纪念版"]
                         },
                         {
                             key: "subtitle",
                             name: "副标题",
-                            type:'input',
+                            type: 'input',
                             maxlength: 15,
                             more: ["做自己的健康第一责任人", "回顾行程卡的1034天", "做好疫情防控第一责任人", "疫情防控，人人有责"]
                         },
                         {
                             key: "phone",
                             name: "归属人",
-                            type:'input',
+                            type: 'input',
                             maxlength: 15,
                             more: ["2020***2022", "您的姓名", "189****1234", "某某某", "芒小幻"]
                         },
                         {
                             key: "time",
                             name: "时间",
-                            type:'input',
+                            type: 'input',
                             maxlength: 15,
                             more: ["2020.02.13 - 2022.12.13", "2020年 - 2022年", "停止于：2022.12.13 00:00:00", "更新于：2022.12.13 00:00:00"]
                         },
                         {
                             key: "type",
                             name: "类型",
-                            type:'radio',
+                            type: 'radio',
                             maxlength: 1,
-                            more: [{name:'绿色',value:0}, {name:'黄色',value:1},{name:'红色',value:2},{name:'禁止',value:3},{name:'生日',value:4}]
+                            more: [{ name: '绿色', value: 0 }, { name: '黄色', value: 1 }, { name: '红色', value: 2 }, { name: '禁止', value: 3 }, { name: '生日', value: 4 }]
                         },
                         {
                             key: "location",
                             name: "到达地点",
-                            type:'textarea',
+                            type: 'textarea',
                             maxlength: 300,
                             more: ["芒果幻城", "湖南省长沙市、芒果幻城", "湖北省武汉市", "湖北省武汉市、湖北省天门市"],
                             textarea: true,
                         }
                     ]
+                }
+            },
+            computed: {
+                cardColor() {
+                    switch (this.card.type) {
+                        case 0: return "绿"
+                        case 1: return "黄"
+                        default: return "红"
+                    }
+                },
+                cardClass() {
+                    switch (this.card.type) {
+                        case 0: return "green"
+                        case 1: return "yellow"
+                        default: return "red"
+                    }
+                },
+                cardArrow() {
+                    switch (this.card.type) {
+                        case 1: return './assets/image/yellow-compressed.png'
+                        case 2: return './assets/image/red-compressed.png'
+                        case 3: return './assets/image/no-compressed.png'
+                        case 4: return './assets/image/birthday-compressed.png'
+                        default: return './assets/image/arrow-compressed.png'
+                    }
                 }
             },
             methods: {
