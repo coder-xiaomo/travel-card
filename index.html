@@ -164,6 +164,27 @@
         .setting-input input {
             width: 100%;
         }
+
+        .yellow {
+            background-color: #f7ba00;
+        }
+
+        .red,
+        .no {
+            background-color: #e43b00;
+        }
+        .text-green{
+            color: #00A766;
+            background-color: #CFEEDF;
+        }
+        .text-red{
+            color: #e43b00;
+            background-color: #ffe6dc;
+        }
+        .text-yellow{
+            color: #f7ba00;
+            background-color: #fff4d3;
+        }
     </style>
     <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.min.js"></script>
     <!-- <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.prod.min.js"></script> -->
@@ -171,7 +192,7 @@
 
 <body>
     <div id="app">
-        <div class="container">
+        <div class="container" :class="card.type==1?'yellow':card.type==0?'':'red'">
             <div>
                 <!-- 用于占位 -->
             </div>
@@ -181,12 +202,11 @@
             </div>
             <div class="card">
                 <div>
-                    <div style="background-color: #CFEEDF; height: 20px;"></div>
-                    <div style="background-color: #CFEEDF;
+                    <div :class="card.type==1?'text-yellow':card.type==0?'text-green':'text-red'" style=" height: 20px;"></div>
+                    <div :class="card.type==1?'text-yellow':card.type==0?'text-green':'text-red'" style="
                                 height: 40px;
                                 position: relative;
                                 margin: 0 auto;
-                                color: #00A766;
                                 border-bottom-left-radius: 24px;
                                 border-bottom-right-radius: 24px;
                                 top: -20px;
@@ -194,7 +214,7 @@
                                 display: inline-block;
                                 padding: 0 40px;
                                 letter-spacing: 0.8px;">
-                        请收下绿色行程卡
+                        请收下{{card.type==1?'黄':card.type==0?'绿':'红'}}色行程卡
                     </div>
                 </div>
                 <div>
@@ -206,7 +226,7 @@
                     </p>
                 </div>
                 <div style="display: grid; place-items: center;">
-                    <img src="./assets/image/arrow-compressed.png" style="width: 45%;" class="animate" />
+                    <img :src="card.type==1?'./assets/image/yellow-compressed.png':card.type==2?'./assets/image/red-compressed.png':card.type==3?'./assets/image/no-compressed.png':card.type==4?'./assets/image/birthday-compressed.png':'./assets/image/arrow-compressed.png'" style="width: 45%;" class="animate" />
                 </div>
                 <div>
                     <div
@@ -251,13 +271,22 @@
                             <template v-for="item in setting">
                                 <div class="setting-title">{{ item.name }}</div>
                                 <div class="setting-input" :style="item.more ? {} : { 'grid-column': 'span 2' }">
-                                    <textarea v-if="item.textarea" v-model="card[item.key]" :maxlength="item.maxlength"
+                                    <textarea v-if="item.type=='textarea'" v-model="card[item.key]" :maxlength="item.maxlength"
                                         style="width: 100%; resize: none;" rows="3"></textarea>
-                                    <input v-else :placeholder="item.name" :maxlength="item.maxlength"
+                                        <div  v-else-if="item.type=='radio'" >
+                                            <select v-model="card[item.key]">
+                                            <template v-for="iitem in item.more">
+                                                <option 
+                                        :value="iitem.value"
+                                        :selected="card[item.key]==iitem.value"> {{iitem.name}}</option>
+                                            </template>
+                                        </select>
+                                        </div>
+                                        <input v-else :placeholder="item.name" :maxlength="item.maxlength"
                                         v-model="card[item.key]" />
                                 </div>
                                 <div class="setting-reset" v-if="item.more">
-                                    <button style="width: 100%;"
+                                    <button v-if="item.type!='radio'" style="width: 100%;"
                                         @click="card[item.key] = getRandom(item.more, card[item.key])">换一个</button>
                                 </div>
                             </template>
@@ -276,17 +305,8 @@
 
         <!-- 底部说明 -->
         <div class="footbar" :class="{ 'footbar-setting': showSetting }">
-            <p :style="showSetting ? {} : { color: '#cfeedf' }">
+            <p :style="showSetting ? {} : { color: '#fffffffa' }">
                 * 本页面仅作纪念，无实际意义，不得用于防疫等相关场景
-            </p>
-            <p v-if="showSetting">
-                本页面由 程序员小墨 制作并开源<br>
-                欢迎关注：
-                <a target="_blank" href="https://space.bilibili.com/457109942">B站</a>
-                <a @click="alert('微信搜索 [程序员小墨] 公众号并关注即可，感谢支持！')">公众号</a>
-                开源地址：
-                <a target="_blank" href="https://github.com/coder-xiaomo/travel-card">GitHub</a>
-                <a target="_blank" href="https://gitee.com/coder-xiaomo/travel-card">Gitee</a>
             </p>
         </div>
     </div>
@@ -300,41 +320,54 @@
                     card: {
                         title: "通信行程卡纪念版",
                         subtitle: "做自己的健康第一责任人",
-                        phone: "某某某",
+                        phone: "芒小幻",
                         time: "停止于：2022.12.13 00:00:00",
                         timeSpan: "2020 - 2022",
-                        location: "湖北省武汉市、湖北省天门市", // ["湖北省武汉市", "湖北省天门市"],
+                        type: 0,
+                        location: "湖南省长沙市、芒果幻城",
                     },
                     setting: [
                         {
                             key: "title",
                             name: "标题",
+                            type:'input',
                             maxlength: 15,
                             more: ["通信行程卡纪念版", "行程卡纪念版", "通信大数据行程卡纪念版"]
                         },
                         {
                             key: "subtitle",
                             name: "副标题",
+                            type:'input',
                             maxlength: 15,
                             more: ["做自己的健康第一责任人", "回顾行程卡的1034天", "做好疫情防控第一责任人", "疫情防控，人人有责"]
                         },
                         {
                             key: "phone",
                             name: "归属人",
+                            type:'input',
                             maxlength: 15,
-                            more: ["2020***2022", "您的姓名", "189****1234", "某某某"]
+                            more: ["2020***2022", "您的姓名", "189****1234", "某某某", "芒小幻"]
                         },
                         {
                             key: "time",
                             name: "时间",
+                            type:'input',
                             maxlength: 15,
                             more: ["2020.02.13 - 2022.12.13", "2020年 - 2022年", "停止于：2022.12.13 00:00:00", "更新于：2022.12.13 00:00:00"]
                         },
                         {
+                            key: "type",
+                            name: "类型",
+                            type:'radio',
+                            maxlength: 1,
+                            more: [{name:'绿色',value:0}, {name:'黄色',value:1},{name:'红色',value:2},{name:'禁止',value:3},{name:'生日',value:4}]
+                        },
+                        {
                             key: "location",
                             name: "到达地点",
+                            type:'textarea',
                             maxlength: 300,
-                            more: null,
+                            more: ["芒果幻城", "湖南省长沙市、芒果幻城", "湖北省武汉市", "湖北省武汉市、湖北省天门市"],
                             textarea: true,
                         }
                     ]
