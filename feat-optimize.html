@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通信行程卡 - 纪念版</title>
+    <link rel="shortcut icon" href="./assets/image/arrow-compressed.png" type="image/x-icon">
+    <style>
+        .animate {
+            animation-name: arrowScale;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-duration: 1.8s;
+        }
+
+        @keyframes arrowScale {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.28);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            text-align: center;
+            user-select: none;
+        }
+
+        a,
+        a:visited {
+            color: #42B883;
+            /* color: white; */
+            text-decoration: none;
+            margin: 0 4px;
+        }
+
+        button {
+            border: none;
+            background-color: #00A961;
+            color: white;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #app {
+            max-width: 512px;
+            background-color: #00A961;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .container {
+            display: grid;
+            height: 100%;
+            width: 100%;
+            grid-template-columns: 1fr;
+            /* grid-template-rows: 4fr 12fr 42fr 20fr; */
+            grid-template-rows: 4fr 12fr auto 20fr;
+            place-items: center;
+        }
+
+        .title {
+            color: white;
+        }
+
+        .card {
+            width: 85%;
+            height: 100%;
+            background-color: white;
+            border-radius: 12.5px;
+            overflow: hidden;
+            display: grid;
+            /* grid-template-rows: 40px 72px 1fr 60px; */
+            grid-template-rows: 40px 72px 200px auto;
+        }
+
+        .bottom {
+            color: white;
+            font-size: 13px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .footbar {
+            color: white;
+            font-size: 13px;
+            position: absolute;
+            bottom: 3px;
+            left: 0;
+            right: 0;
+            z-index: 3;
+        }
+
+        .footbar-setting {
+            font-size: 14;
+            background-color: #000000;
+            bottom: 0;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            padding: 10px;
+            line-height: 1.5em;
+        }
+
+        .cover {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+        .grey-cover {
+            /* background-color: #0000006e; */
+            /* 兼容 */
+            background-color: #000000;
+            opacity: 0.5;
+        }
+
+        .control-panel-container {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            display: grid;
+            place-items: center;
+        }
+
+        .control-panel {
+            width: 80%;
+            max-width: 480px;
+            min-height: 30%;
+            background-color: #FFF;
+        }
+
+        .setting-title {
+            text-align: left;
+        }
+
+        .setting-input {
+            width: 100%;
+        }
+
+        .setting-input input {
+            width: 100%;
+        }
+
+        @font-face {
+            font-family: PangMenZhengDao;
+            src: url('assets/font/PangMenZhengDao-3.ttf');
+        }
+    </style>
+    <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.prod.min.js"></script> -->
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div style="height:30px;">
+                <!-- 用于占位 -->
+            </div>
+            <div class="title">
+                <div v-if="official_text">
+                      <svg style="width: 265px;" viewBox="0 0 141 17" xmlns="http://www.w3.org/2000/svg"><path stroke="null" fill-rule="evenodd" fill="rgb(255, 255, 255)" d="m141.1651,6.13997l0,2.21402l-8.29559,0l0,8.19423l-2.44296,0l0,-8.19423l-4.13019,0l0,-0.34238l0,-1.52926l0,-0.34238l4.13019,0l0,-6.07149l2.44296,0l0,1.07279l7.39921,0l0,2.23683l-7.39921,0l0,2.76187l8.29559,0zm-23.41036,10.38544l-3.25145,0l0,-2.07712l3.25145,0l0,-1.57493l-3.02294,0l0,-2.12273l3.02294,0l0,-1.34665l-3.25145,0l0,-2.09993l8.92827,0l0,2.09993l-3.23382,0l0,1.34665l3.00537,0l0,2.12273l-3.00537,0l0,1.57493l3.23382,0l0,2.07712l-3.23382,0l-2.443,0zm5.11446,-10.65934c-0.17577,0.22823 -0.38093,0.40729 -0.61515,0.53637c-0.23454,0.12946 -0.48634,0.194 -0.75576,0.194l-0.22845,0l-4.37627,0l-2.39028,0l0,-2.12268l0,-4.38248l0.3867,0l2.00358,0l4.16535,0l2.00357,0l0.36907,0l0,3.99443c0,0.3502 -0.04998,0.67726 -0.14935,0.98147c-0.0997,0.30458 -0.2373,0.5706 -0.41301,0.79889zm-1.81028,-3.67486l-4.16535,0l0,2.28255l3.60293,0c0.16396,0 0.29876,-0.06853 0.40422,-0.20543c0.10546,-0.137 0.1582,-0.30426 0.1582,-0.50219l0,-1.57493zm-8.87554,4.97589l1.40601,0l0.43938,9.35831l-1.40601,0l-0.43938,-9.35831zm-0.19335,9.35831l-1.95084,0l0,-10.13434l-2.03873,0l0,-2.23688l2.03873,0l0,-1.57493l-2.00358,0.11409l0,-2.25969l5.94042,-0.34238l0,2.25969l-1.986,0.11414l0,1.68908l2.03874,0l0,2.23688l-2.03874,0l0,10.13434zm-9.33248,-2.48797c0,0.35025 -0.05273,0.67726 -0.15819,0.98152c-0.04697,0.16757 -0.10547,0.31202 -0.17578,0.43366c-0.07025,0.12196 -0.15237,0.25109 -0.24602,0.38804c-0.16424,0.21325 -0.37511,0.39586 -0.63273,0.5478c-0.21087,0.1066 -0.46299,0.15976 -0.7557,0.15976l-3.07573,0l0.80849,-2.05426l1.10725,0c0.1521,0 0.28118,-0.07597 0.38664,-0.22823c0.11701,-0.12164 0.17578,-0.28889 0.17578,-0.50219l0,-6.91601l-4.83323,0l0,-2.28249l10.17614,0l0,2.28249l-2.77692,0l0,7.18991zm-6.30954,-14.03744l8.03194,0l0,2.25969l-8.03194,0l0,-2.25969zm-3.16356,7.48667l0.59757,0l0,9.10722l-2.35512,0l0,-7.1443l-1.47632,0l1.37085,-3.9487l-1.37085,0l1.89811,-5.50089l2.56599,0l-1.35327,3.9259l1.35327,0l-1.23023,3.56077zm-8.50647,3.01292l0.31633,0l0.8085,0l1.44116,0l0,3.76614c0,0.30452 -0.04394,0.58592 -0.13183,0.84451c-0.08788,0.25891 -0.2051,0.48326 -0.35149,0.67332c-0.14665,0.19044 -0.32237,0.34238 -0.52726,0.45652c-0.20515,0.11415 -0.41904,0.17119 -0.64151,0.17119l-3.47989,0l-0.29881,0l-1.93327,0l0,-5.91168l1.0721,0l1.15998,0l0.43937,0l0,-1.3467l-2.72418,0l0,-1.75756l2.72418,0l0,-0.91298l2.12662,0l0,0.91298l2.72418,0l0,1.75756l-2.72418,0l0,1.3467zm-2.56599,1.55207l0,2.78468l2.33749,0c0.15215,0 0.28123,-0.06848 0.38669,-0.20543c0.10541,-0.13695 0.15814,-0.3042 0.15814,-0.50213l0,-2.07712l-2.88232,0zm3.86654,-6.27687l-6.73135,0l0,8.35399l-0.54483,2.39663l-2.1442,0l0.43938,-2.25968l0,-14.22006l10.40463,0l0,3.90309c0,0.60879 -0.12606,1.06531 -0.3779,1.36951c-0.25207,0.30458 -0.60054,0.45652 -1.04573,0.45652zm-0.80845,-4.10852l-5.94047,0l0,2.12273l5.67682,0c0.117,0 0.19033,-0.02641 0.21971,-0.0799c0.02912,-0.05316 0.04394,-0.14051 0.04394,-0.26253l0,-1.7803zm-8.34827,4.7476l-1.28302,3.46944l0,4.54218c0,0.30458 -0.04119,0.58597 -0.12304,0.84451c-0.08206,0.25891 -0.19055,0.48326 -0.32512,0.67337c-0.13485,0.19044 -0.29299,0.34238 -0.47453,0.45647c-0.18181,0.11414 -0.37786,0.17119 -0.58878,0.17119l-1.89812,0l0.40422,-1.59774l0.31634,0c0.14062,0 0.26063,-0.06848 0.36033,-0.20543c0.09937,-0.13695 0.14935,-0.3042 0.14935,-0.50213l0,-0.91304l-1.38843,0l1.38843,-3.76614l0,-5.86602l-1.37085,0l0,-2.23688l1.37085,0l0,-1.3695l2.17935,0l0,1.3695l0.86122,0l0,2.23688l-0.86122,0l0,2.69334l1.28302,0zm-10.43974,6.87034c-0.44546,0.57848 -0.91999,1.12629 -1.42364,1.64341c-0.50391,0.5175 -1.0254,1.01964 -1.5642,1.50646l0,-3.42377c0.29278,-0.31951 0.57395,-0.62765 0.84365,-0.92442c0.26937,-0.2967 0.52726,-0.59702 0.77329,-0.90155c-0.44542,-0.85206 -0.80844,-1.78036 -1.08968,-2.78468c-0.28118,-1.00433 -0.45118,-2.13773 -0.50968,-3.40096l2.00358,0c0.04669,0.89805 0.15517,1.67764 0.32517,2.33959c0.16968,0.66195 0.3894,1.27461 0.65909,1.8374c0.32787,-0.63908 0.58269,-1.35025 0.7645,-2.13411c0.18154,-0.78358 0.27244,-1.71549 0.27244,-2.79611l-0.82607,0l-3.18113,0l1.05452,-4.17699l2.46058,0l-0.47458,1.94011l2.91753,0l0,2.23688c0,1.43049 -0.14363,2.71265 -0.43059,3.84605c-0.28727,1.13378 -0.6827,2.16479 -1.18634,3.09282c0.24608,0.30453 0.50364,0.60485 0.77334,0.90155c0.26937,0.29677 0.55055,0.60491 0.84359,0.92442l0,3.42377c-0.53907,-0.48682 -1.06331,-0.98896 -1.57299,-1.50646c-0.50968,-0.51712 -0.98723,-1.06493 -1.43238,-1.64341zm-5.66808,2.9102c-0.70902,-0.12907 -1.43237,-0.32312 -2.17056,-0.58204c-0.74994,0.25892 -1.47934,0.45297 -2.18808,0.58204c-0.70907,0.12946 -1.50878,0.23967 -2.39906,0.331l0,-1.96297c0.46849,-0.07597 0.9724,-0.16726 1.51147,-0.2739c-0.15237,-0.07597 -0.3048,-0.15588 -0.45695,-0.23967c-0.15243,-0.08346 -0.31057,-0.17119 -0.47453,-0.26247l0,-1.98578l0,-0.45652l-0.57999,0l0,-2.07712l0.57999,0l0,-0.70756l2.12661,0l0,0.70756l3.74355,0l0,-0.70756l2.12662,0l0,0.70756l0.57999,0l0,2.07712l-0.57999,0l0,0.45652l0,1.98578c-0.16423,0.09128 -0.32243,0.17901 -0.47453,0.26247c-0.15242,0.08379 -0.30485,0.1637 -0.45695,0.23967c0.5388,0.10664 1.04271,0.19793 1.51147,0.2739l0,1.96297c-0.89061,-0.09133 -1.69026,-0.20154 -2.39906,-0.331zm-0.30755,-4.85031l-3.74355,0l0,1.27822c0.31634,0.16758 0.63273,0.31202 0.94906,0.43366c0.31639,0.12196 0.62669,0.2436 0.93148,0.36518c0.30458,-0.12158 0.61213,-0.24322 0.92275,-0.36518c0.31029,-0.12164 0.62393,-0.26608 0.94026,-0.43366l0,-1.27822zm0.08789,-6.3454l2.02116,0l0.59756,2.99011l-2.02115,0l-0.59757,-2.99011zm-4.51689,2.99011l-2.02115,0l0.59756,-2.99011l2.02116,0l-0.59757,2.99011zm3.76113,0l-2.4078,0l0,-3.56072l-3.37448,0l0,-2.07712l0.73818,0l-0.36912,-1.87164l2.23208,0l0.36912,1.87164l0.40422,0l0,-2.28249l2.4078,0l0,2.28249l0.40422,0l0.36912,-1.87164l2.23208,0l-0.36912,1.87164l0.73818,0l0,2.07712l-3.37448,0l0,3.56072zm-8.34828,8.46813l-2.84722,0l-4.90348,-8.19423l-4.78049,8.21704l-2.93512,0l6.02837,-10.31697l-6.04594,0l0,-2.35097l6.85438,0l0,-3.69766l2.35512,0l0,3.69766l6.16892,0l0,2.35097l-6.415,0l-0.86118,1.48365l2.12662,0l5.25502,8.81051zm-18.49804,-0.58204c-0.14665,0.19044 -0.32237,0.34238 -0.52726,0.45646c-0.20515,0.11415 -0.41904,0.17119 -0.64151,0.17119l-8.94584,0l0,-6.59644l10.59793,0l0,4.4509c0,0.30458 -0.04394,0.58598 -0.13183,0.84451c-0.08783,0.25891 -0.2051,0.48327 -0.35149,0.67338zm-1.74876,-4.23409l-6.13377,0l0,3.12705l5.85259,0c0.08185,0 0.14941,-0.03424 0.20214,-0.10271c0.05267,-0.06848 0.07904,-0.14838 0.07904,-0.23966l0,-2.78468zm-8.34827,-4.61066l10.56277,0l0,2.1684l-10.56277,0l0,-2.1684zm0,-2.87596l10.56277,0l0,2.19121l-10.56277,0l0,-2.19121zm0,-2.78468l4.09504,0l-0.22845,-1.27823l2.65388,0l0.22844,1.27823l3.81386,0l0,2.19121l-10.56277,0l0,-2.19121zm-0.66783,2.67053l0,12.50818l-2.54846,0l0,-10.04306l-1.68719,0l2.21445,-6.45949l2.65387,0l-1.37085,3.99437l0.73818,0zm-19.91289,11.50386l-0.17572,0.86737l-2.03878,0l1.24787,-5.79759l-1.24787,0l0.01758,-0.06848l1.28302,-4.88455l-1.3006,0l0,-2.07713l3.53268,0l0.28118,0l-1.26539,4.9759l0.98421,0l-0.72061,3.81181l1.19514,1.98578l11.24823,0l0,2.05426l-12.4961,0l-0.54484,-0.86737zm12.54004,-2.3624c-0.14665,0.19044 -0.3194,0.33882 -0.51847,0.44509c-0.19939,0.10665 -0.41031,0.15981 -0.63272,0.15981l-0.96669,0l-0.70298,-1.87169l0.6503,0c0.12876,0 0.23724,-0.05311 0.32513,-0.15976c0.08788,-0.10627 0.13183,-0.24322 0.13183,-0.41085l0,-0.38805l-0.01758,0l-2.1442,0l0,2.64773l-2.26723,0l0,-2.64773l-2.19693,0l0,2.64773l-2.14419,0l0,-9.70069l0.68546,0l1.3006,0l-0.54484,-1.11841l2.37264,0l0.54484,1.11841l1.47631,0l1.0721,-1.73468l-6.90711,0l0,-1.73475l5.57141,0l4.83323,0l-1.93333,3.46943l0.33397,0l0.54484,0c0.22241,0 0.43333,0.05705 0.63267,0.17119c0.19911,0.11415 0.37187,0.27034 0.51847,0.46795c0.14638,0.19794 0.26063,0.4301 0.34275,0.69613c0.08185,0.26641 0.12304,0.54425 0.12304,0.83314l0,0.11414l0,4.51937l0,0.98146c0,0.28922 -0.04394,0.56312 -0.13183,0.82171c-0.08788,0.25891 -0.20515,0.48326 -0.35149,0.67332zm-6.14261,-7.54372l-2.19693,0l0,1.02719l2.19693,0l0,-1.02719zm0,2.67054l-2.19693,0l0,1.02719l2.19693,0l0,-1.02719zm2.26723,1.02719l0.61515,0l1.54663,0l0,-1.02719l-0.05274,0l-2.10904,0l0,1.02719zm2.02116,-3.54934c-0.08212,-0.09878 -0.18758,-0.14839 -0.31634,-0.14839l-1.70482,0l0,1.02719l0.58,0l1.58178,0l0,-0.47933l0.01757,0c-0.02361,-0.16731 -0.07634,-0.30032 -0.15819,-0.39947zm-12.88274,-5.60355l2.28481,0l1.19514,2.73901l-2.28482,0l-1.19513,-2.73901zm109.81068,6.98448l-0.42179,9.35831l-1.40601,0l0.42179,-9.35831l1.40601,0zm30.95014,8.49094l-2.7417,0l-4.30597,-5.98021l2.56599,0l4.48168,5.98021z" id="svg_1"/></svg>
+                </div>
+                <h1 v-else style="display: grid; font-weight: normal; letter-spacing: -1px; text-indent: -1px; font-size: 40px; font-family: PangMenZhengDao; ">{{ card.title }}</h1>
+                <p style="margin-top: 10px; margin-bottom: 12px; font-size: 17px;">{{ card.subtitle }}</p>
+            </div>
+            <div class="card">
+                <div>
+                    <div style="background-color: #CFEEDF; height: 16px;"></div>
+                    <div style="background-color: #CFEEDF;
+                                height: 35px;
+                                position: relative;
+                                margin: 0 auto;
+                                color: #00A766;
+                                border-bottom-left-radius: 24px;
+                                border-bottom-right-radius: 24px;
+                                top: -20px;
+                                line-height: 40px;
+                                display: inline-block;
+                                padding: 0 40px;
+                                letter-spacing: 0.8px;
+                                font-size: 15px;
+                                font-weight: bold;
+                                border-radius: 20px; ">
+                        请收下绿色行程卡
+                    </div>
+                </div>
+                <div>
+                    <p style="font-weight: bold; font-size: 16.5px; margin-top: 5px;">
+                        {{ card.phone }}的动态行程卡
+                    </p>
+                    <p style="font-size: 20px; color: grey; margin-top: 15px; font-weight: bold;">
+                        {{ card.time }}
+                    </p>
+                </div>
+                <div style="display: grid; place-items: center;">
+                    <img src="./assets/image/arrow-compressed.png" style="width: 40%;" class="animate" />
+                </div>
+                <div>
+                    <div style="border-top: 1px solid #E3E3E3; margin: 0 20px; padding-top: 8px; color: #91919B; padding-bottom: 12px; text-align: left; font-size: 17.5px;">
+                        您于{{ card.timeSpan }}到达或途经：<span style="font-weight: bold; color: black;">{{ card.location
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div style="margin: 12px 10%;">
+                    2022年12月13日0时起，正式下线“通信行程卡”服务，“通信行程卡”短信、网页、微信小程序、支付宝小程序、APP等查询渠道将同步下线。
+                </div>
+                <div>
+                    ————————— 三年了，再见 —————————
+                </div>
+                <div style="margin-top: 8px;">
+                    <p>2020.02.13 - 2022.12.13</p>
+                </div>
+            </div>
+            <div style="height:120px;">
+                <!-- 用于占位 -->
+            </div>
+        </div>
+
+        <!-- 设置页面 -->
+        <div v-if="showSetting" class="cover grey-cover"></div>
+        <div v-else class="cover" @click="toggleSetting"></div>
+        <div v-if="showSetting" class="control-panel-container" @click="toggleSetting">
+            <div class="control-panel" @click.stop>
+                <div style="position: relative; text-align: initial; padding: 16px;">
+                    <!-- 关闭按钮 -->
+                    <div style="font-size: 40px;
+                                position: absolute;
+                                right: 5px;
+                                top: 5px;
+                                line-height: 32px;
+                                width: 32px;
+                                height: 32px;
+                                cursor: pointer;" @click="toggleSetting">×</div>
+                    <div style="display: grid;">
+                        <div style="font-weight: bold; margin-bottom: 20px;">设置</div>
+                        <!-- 设置项 -->
+                        <div style="display: grid; grid-template-columns: auto 1fr 60px; gap: 10px; font-size: 14px;">
+                            <template v-for="item in setting">
+                                <div class="setting-title">{{ item.name }}</div>
+                                <div class="setting-input" :style="item.more ? {} : { 'grid-column': 'span 2' }">
+                                    <textarea v-if="item.textarea" v-model="card[item.key]" :maxlength="item.maxlength"
+                                        style="width: 100%; resize: none;" rows="3"></textarea>
+                                    <input v-else :placeholder="item.name" :maxlength="item.maxlength"
+                                        v-model="card[item.key]" />
+                                </div>
+                                <div class="setting-reset" v-if="item.more">
+                                    <button style="width: 100%;"
+                                        @click="card[item.key] = getRandom(item.more, card[item.key])">换一个</button>
+                                </div>
+                            </template>
+                        </div>
+                        <div style="font-size: 13px; color: grey;">
+                            <p><b>说明：</b></p>
+                            <p style="text-indent: 5px;">1. 配置好后，您可以截图保存</p>
+                            <p style="text-indent: 5px;">2. 点击屏幕可以再次打开本窗口</p>
+                            <p style="text-indent: 5px;">3. 以上配置在刷新后将恢复默认</p>
+                        </div>
+                        <button style="margin-top: 10px;" @click="toggleSetting">完成</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部说明 -->
+        <div class="footbar" :class="{ 'footbar-setting': showSetting }">
+            <p :style="showSetting ? {} : { color: '#cfeedf' }">
+                * 本页面仅作纪念，无实际意义，不得用于防疫等相关场景
+            </p>
+            <p v-if="showSetting">
+                本页面由 程序员小墨 制作并开源<br>
+                欢迎关注：
+                <a target="_blank" href="https://space.bilibili.com/457109942">B站</a>
+                <a @click="alert('微信搜索 [程序员小墨] 公众号并关注即可，感谢支持！')">公众号</a>
+                开源地址：
+                <a target="_blank" href="https://github.com/coder-xiaomo/travel-card">GitHub</a>
+                <a target="_blank" href="https://gitee.com/coder-xiaomo/travel-card">Gitee</a>
+                <br>页面二次优化：<a target="_blank" href="https://space.bilibili.com/38238808">@呱行次比猫</a>
+            </p>
+        </div>
+    </div>
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    showSetting: false,
+                    official_text: true,
+                    card: {
+                        title: "通信大数据行程卡",
+                        subtitle: "疫情防控，人人有责",
+                        phone: "138****1234",
+                        time: "停止于：2022.12.13 00:00:00",
+                        timeSpan: " 2020-2022 年",
+                        location: "山东省青岛市,山东省济南市", // ["湖北省武汉市", "湖北省天门市"],
+                    },
+                    setting: [
+                        {
+                            key: "title",
+                            name: "标题",
+                            maxlength: 10,
+                            more: ["通信大数据行程卡", "通信行程卡纪念版", "行程卡纪念版", "大数据行程卡纪念版"]
+                        },
+                        {
+                            key: "subtitle",
+                            name: "副标题",
+                            maxlength: 15,
+                            more: ["做自己的健康第一责任人", "回顾行程卡的1034天", "做好疫情防控第一责任人", "疫情防控，人人有责"]
+                        },
+                        {
+                            key: "phone",
+                            name: "归属人",
+                            maxlength: 15,
+                            more: ["2020***2022", "您的姓名", "189****1234", "某某某"]
+                        },
+                        {
+                            key: "time",
+                            name: "当前时间",
+                            maxlength: 15,
+                            more: ["2020.02.13 - 2022.12.13", "2020年 - 2022年", "停止于：2022.12.13 00:00:00", "更新于：2022.12.13 00:00:00"]
+                        },
+                        {
+                            key: "timeSpan",
+                            name: "途径时间",
+                            maxlength: 15,
+                            more: [" 2020 - 2022 年", " 2020-2022 年", " 2020 - 2022 ", " 2020-2022 "]
+                        },
+                        {
+                            key: "location",
+                            name: "到达地点",
+                            maxlength: 300,
+                            more: null,
+                            textarea: true,
+                        }
+                    ]
+                }
+            },
+            methods: {
+                toggleSetting(e) {
+                    console.log(e)
+                    this.official_text = (this.card.title == '通信大数据行程卡')
+                    this.showSetting = !this.showSetting
+                },
+                getRandom(arr, oldVal) {
+                    let returnVal = oldVal
+                    while (returnVal == oldVal && (
+                        arr.length > 1 || (arr.length == 1 && arr[0] !== oldVal)
+                    )) {
+                        returnVal = arr[Math.floor(Math.random() * arr.length)]
+                    }
+                    return returnVal
+                }
+            }
+        }).mount('#app')
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c705e08000e0184050fbc8a24866da5c";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</body>
+
+</html>
