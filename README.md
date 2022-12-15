@@ -7,3 +7,9 @@
 
 
 本项目由 程序员小墨 制作并开源，欢迎关注我的[B站](https://space.bilibili.com/457109942)和公众号（ID：程序员小墨）
+
+
+
+感谢大家提的Pr，由于功能差异无法合并到同一分支，所以合并到不同分支中了，大家可以前往以下分支查看：
+
+- feat-color: 黄、红卡及彩蛋卡版（[小林囝](https://gitee.com/teochew)提交的[Pull Request](https://gitee.com/coder-xiaomo/travel-card/pulls/1)）
