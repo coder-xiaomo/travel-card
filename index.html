@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#00A961" id="metaThemeColor">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>通信行程卡 - 纪念版</title>
     <link rel="shortcut icon" href="./assets/image/arrow-compressed.png" type="image/x-icon">
@@ -355,7 +356,7 @@
                             key: "time",
                             name: "时间",
                             type: 'input',
-                            maxlength: 15,
+                            maxlength: 25,
                             more: ["2020.02.13 - 2022.12.13", "2020年 - 2022年", "停止于：2022.12.13 00:00:00", "更新于：2022.12.13 00:00:00"]
                         },
                         {
@@ -415,6 +416,18 @@
                     }
                     return returnVal
                 }
+            },
+            mounted() {
+                this.$watch("card.type", (newVal, oldVal) => {
+                    // console.log(oldVal, newVal)
+                    let newColor = ''
+                    switch (newVal) {
+                        case 0: newColor = "#00A961"; break;
+                        case 1: newColor = "#f7ba00"; break;
+                        default: newColor = "#e43b00"; break;
+                    }
+                    document.getElementById('metaThemeColor').content = newColor
+                });
             }
         }).mount('#app')
     </script>
