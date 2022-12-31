@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 
 <head>
     <meta charset="UTF-8">
@@ -165,6 +165,10 @@
         .setting-input input {
             width: 100%;
         }
+
+        .warning {
+            font-weight: bolder;
+        }
     </style>
     <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.min.js"></script>
     <!-- <script src="https://cdn.staticfile.org/vue/3.2.45/vue.global.prod.min.js"></script> -->
@@ -277,7 +281,7 @@
 
         <!-- 底部说明 -->
         <div class="footbar" :class="{ 'footbar-setting': showSetting }">
-            <p :style="showSetting ? {} : { color: '#cfeedf' }">
+            <p :style="showSetting ? {} : { color: '#cfeedf' }" class="warning">
                 * 本页面仅作纪念，无实际意义，不得用于防疫等相关场景
             </p>
             <p v-if="showSetting">
