@@ -1,5 +1,7 @@
 # 通信行程卡纪念版 H5
 
+> **关于网传微信小程序涉嫌违规相关资讯与本项目无关，且不存在相互抄袭，[点击查看特别说明](https://www.bilibili.com/read/cv20610303)。**
+
 仓库地址：[GitHub](https://github.com/coder-xiaomo/travel-card) [Gitee](https://gitee.com/coder-xiaomo/travel-card)
 
 演示地址：https://coder-xiaomo.gitee.io/travel-card/
